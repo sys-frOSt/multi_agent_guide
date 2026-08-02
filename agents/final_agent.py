@@ -7,7 +7,7 @@ from agents.llm import llm
 import json
 
 
-def flight_agent(state: TravelState):
+def final_agent(state: TravelState):
     final_prompt = f"""
     Generate a final travel response.
 
