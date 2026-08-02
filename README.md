@@ -1,0 +1,123 @@
+# Multi-Agent Travel Planner
+
+A multi-agent travel planning system built with LangGraph and LangChain that helps users plan flights, hotels, and itineraries using specialized AI agents.
+
+## Features
+
+- **Flight Agent**: Searches for flights using AviationStack API
+- **Hotel Agent**: Finds hotels using Tavily search
+- **Itinerary Agent**: Creates day-by-day travel plans
+- **Final Agent**: Polishes and presents the final travel plan
+- **PostgreSQL Checkpointing**: Persists conversation state via PostgresSaver
+- **Groq LLM Integration**: Powers all agents with fast LLM inference
+
+## Architecture
+
+The system uses a LangGraph StateGraph with four specialized agents in sequence:
+
+```
+START -> Flight Agent -> Hotel Agent -> Itinerary Agent -> Final Agent -> END
+```
+
+Each agent receives the shared `TravelState`, performs its task, and passes updated information to the next agent.
+
+### State Schema
+```python
+class TravelState(TypedDict):
+    messages: Annotated[list[AnyMessage], operator.add]
+    user_query: str
+    flight_results: str
+    hotel_results: str
+    itinerary: str
+    final_response: str
+    llm_calls: int
+```
+
+## Setup
+
+### Prerequisites
+- Python 3.9+
+- PostgreSQL database
+- API keys for:
+  - Groq (`GROQ_API_KEY`)
+  - AviationStack (`AVIATION_API_KEY`)
+  - Tavily (`TAVILY_API_KEY`)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd multi_agent_guide
+   ```
+
+2. Install dependencies:
+   ```bash
+   uv sync
+   # or
+   pip install -e .
+   ```
+
+3. Configure environment variables:
+   Copy `.env.example` to `.env` and fill in your API keys and database connection:
+   ```dotenv
+   GROQ_API_KEY=your_groq_key
+   AVIATION_API_KEY=your_aviationstack_key
+   TAVILY_API_KEY=your_tavily_key
+   DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+   ```
+
+4. Initialize the database:
+   The application will automatically create required tables on first run via `checkpointer.setup()`.
+
+## Usage
+
+Run the travel planner:
+```bash
+python main.py
+```
+
+You'll be prompted to enter a travel request, for example:
+> "Plan a 5-day trip to Paris for two people in July with a budget of $3000"
+
+The system will process your request through each agent and display the final travel plan.
+
+## How It Works
+
+1. **Flight Agent**: Uses AviationStack API to search for flights matching your criteria
+2. **Hotel Agent**: Queries Tavily search for hotel options in your destination
+3. **Itinerary Agent**: Creates a day-by-day schedule incorporating flights, hotels, and activities
+4. **Final Agent**: Polishes the itinerary into a readable travel guide
+
+Each step maintains state in PostgreSQL, allowing for pausing and resuming conversations.
+
+## Configuration
+
+Adjust these environment variables in `.env`:
+
+| Variable | Description |
+|----------|-------------|
+| `GROQ_API_KEY` | API key for Groq LLM service |
+| `AVIATION_API_KEY` | API key for AviationStack flight data |
+| `TAVILY_API_KEY` | API key for Tavily search |
+| `DATABASE_URL` | PostgreSQL connection string |
+
+## Project Structure
+
+- `agents/`
+  - `flight_agent.py`
+  - `hotel_agent.py`
+  - `itinerary_agent.py`
+  - `final_agent.py`
+  - `llm.py` (shared LLM configuration)
+- `graph/`
+  - `builder.py` (agent workflow graph)
+  - `state.py` (TravelState definition)
+- `main.py` (application entry point)
+- `.env` (environment variables, not tracked)
+
+## Notes
+
+- This is a proof-of-concept demonstration of multi-agent LLM workflows.
+- No formal test suite exists; verify functionality by running the application.
+- Code follows typical Python conventions; no enforced formatter.
