@@ -3,20 +3,18 @@ from __future__ import annotations
 import os
 from typing import Any
 from dotenv import load_dotenv
-from narwhals import Unknown
 import requests
 from langchain_core.tools import tool
-API_KEY=os.getenv("AVIATION_API_KEY")
-
-AVIATIONSTACK_BASE = "https://api.aviationstack.com/v1"
 
 load_dotenv()
 
+AVIATIONSTACK_BASE = "https://api.aviationstack.com/v1"
+
 
 def _require_key() -> str:
-    key = os.getenv("API_KEY")
+    key = os.getenv("AVIATION_API_KEY") or os.getenv("API_KEY")
     if not key:
-        raise RuntimeError("API_KEY is not set in the environment")
+        raise RuntimeError("AVIATION_API_KEY or API_KEY is not set in the environment")
     return key
 
 @tool
