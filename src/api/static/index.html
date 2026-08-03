@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi-Agent Travel Planner</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">AI-powered trip planning</p>
+          <h1>Design a trip that feels effortless.</h1>
+          <p class="hero-copy">
+            Plan flights, hotels, and day-by-day itineraries with a polished experience built for fast decisions.
+          </p>
+        </div>
+        <div class="hero-card">
+          <h2>What you can ask</h2>
+          <ul>
+            <li>5-day trip to Paris for two</li>
+            <li>Weekend escape to Tokyo with a boutique hotel</li>
+            <li>Budget-friendly family trip to Lisbon</li>
+          </ul>
+        </div>
+      </header>
+
+      <main class="content-grid">
+        <section class="panel planner-panel">
+          <form id="planner-form">
+            <label for="user-query">Describe your ideal trip</label>
+            <textarea
+              id="user-query"
+              name="user_query"
+              rows="7"
+              placeholder="Plan a 4-day trip to Rome for two, with a relaxed pace and a budget of $2200."
+            ></textarea>
+            <div class="form-actions">
+              <button type="submit" id="submit-btn">Generate itinerary</button>
+              <span class="helper-text">Your request is sent to the travel planning API.</span>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel result-panel" id="result-panel">
+          <div class="result-placeholder">
+            <h2>Ready when you are</h2>
+            <p>Your travel plan will appear here with a clear summary and itinerary details.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
