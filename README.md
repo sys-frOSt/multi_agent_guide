@@ -46,41 +46,56 @@ class TravelState(TypedDict):
 ### Installation
 
 1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd multi_agent_guide
-   ```
+    ```bash
+    git clone <repository-url>
+    cd multi_agent_guide
+    ```
 
 2. Install dependencies:
-   ```bash
-   uv sync
-   # or
-   pip install -e .
-   ```
+    ```bash
+    uv sync
+    # or
+    pip install -e .
+    ```
 
 3. Configure environment variables:
-   Copy `.env.example` to `.env` and fill in your API keys and database connection:
-   ```dotenv
-   GROQ_API_KEY=your_groq_key
-   AVIATION_API_KEY=your_aviationstack_key
-   TAVILY_API_KEY=your_tavily_key
-   DATABASE_URL=postgresql://user:password@localhost:5432/dbname
-   ```
+    Copy `.env.example` to `.env` and fill in your API keys and database connection:
+    ```dotenv
+    GROQ_API_KEY=your_groq_key
+    AVIATION_API_KEY=your_aviationstack_key
+    TAVILY_API_KEY=your_tavily_key
+    DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+    ```
 
 4. Initialize the database:
-   The application will automatically create required tables on first run via `checkpointer.setup()`.
+    The application will automatically create required tables on first run via `checkpointer.setup()`.
 
 ## Usage
 
-Run the travel planner:
+### Command Line Interface
+Run the travel planner via CLI:
 ```bash
 python main.py
 ```
-
 You'll be prompted to enter a travel request, for example:
 > "Plan a 5-day trip to Paris for two people in July with a budget of $3000"
 
 The system will process your request through each agent and display the final travel plan.
+
+### Web Interface (FastAPI + Static Frontend)
+The project also provides a web interface served by FastAPI.
+
+1. Start the API server:
+    ```bash
+    uvicorn src.api.main:app --reload
+    ```
+    The server will be available at `http://localhost:8000`.
+
+2. Open your browser to `http://localhost:8000` to access the travel planner UI.
+
+3. Enter your travel request and submit to receive a generated itinerary.
+
+Both interfaces share the same backend agent workflow.
 
 ## How It Works
 
@@ -113,7 +128,10 @@ Adjust these environment variables in `.env`:
 - `graph/`
   - `builder.py` (agent workflow graph)
   - `state.py` (TravelState definition)
-- `main.py` (application entry point)
+- `src/api/`
+  - `main.py` (FastAPI application)
+  - `static/` (static frontend files: HTML, CSS, JS)
+- `main.py` (CLI entry point)
 - `.env` (environment variables, not tracked)
 
 ## Notes
